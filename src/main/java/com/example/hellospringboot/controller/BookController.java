@@ -29,7 +29,7 @@ public class BookController {
 
     // Get book by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
+    public ResponseEntity<Book> getBookById(@PathVariable int id) {
         Optional<Book> book = bookRepository.findById(id);
         return book.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -43,18 +43,13 @@ public class BookController {
 
     // Update existing book
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
-        return bookRepository.findById(id).map(book -> {
-            book.setTitle(updatedBook.getTitle());
-            book.setAuthor(updatedBook.getAuthor());
-            book.setPublishedYear(updatedBook.getPublishedYear());
-            return ResponseEntity.ok(bookRepository.save(book));
-        }).orElse(ResponseEntity.notFound().build());
+    public Book updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+        return b2.updateBook(id , updatedBook);
     }
 
     // Delete book by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteBook(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteBook(@PathVariable int id) {
         return bookRepository.findById(id).map(book -> {
             bookRepository.delete(book);
             return ResponseEntity.noContent().build();
